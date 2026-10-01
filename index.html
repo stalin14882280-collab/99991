@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Огненный Рандомайзер Сверхновых</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(circle at center, #2b0000 0%, #0a0101 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Анимированный фон: летящие искры */
+        .sparks {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: 
+                radial-gradient(circle, #ff3700 1px, transparent 1px),
+                radial-gradient(circle, #ffdd00 2px, transparent 2px);
+            background-size: 400px 400px, 300px 300px;
+            background-position: 0 0, 40px 60px;
+            animation: flySparks 12s linear infinite;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        @keyframes flySparks {
+            0% { background-position: 0 0, 40px 60px; }
+            100% { background-position: 400px -400px, 340px -240px; }
+        }
+
+        /* Главный контейнер с пульсацией пламени */
+        .container {
+            background: rgba(20, 5, 5, 0.6);
+            backdrop-filter: blur(15px);
+            border: 2px solid #ff3700;
+            border-radius: 28px;
+            padding: 35px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 55, 0, 0.25), inset 0 0 30px rgba(255, 221, 0, 0.1);
+            animation: pulseGlow 4s infinite alternate ease-in-out;
+            z-index: 1;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 40px rgba(255, 55, 0, 0.2); border-color: #ff3700; }
+            100% { box-shadow: 0 0 60px rgba(255, 221, 0, 0.4); border-color: #ffdd00; }
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            background: linear-gradient(90deg, #ff0000, #ff7700, #ffdd00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 900;
+            filter: drop-shadow(0 2px 10px rgba(255,55,0,0.3));
+        }
+
+        p.subtitle {
+            color: #ffaaaa;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        /* Огненное Колесо */
+        .wheel-wrapper {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* Стрелка сверху с анимацией тиканья */
+        .pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(0deg);
+            transform-origin: top center;
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 35px solid #ffdd00;
+            z-index: 10;
+            filter: drop-shadow(0 0 12px #ff3700);
+        }
+
+        .pointer.tick {
+            animation: arrowTick 0.15s ease-out;
+        }
+
+        @keyframes arrowTick {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            30% { transform: translateX(-50%) rotate(-15deg); }
+            100% { transform: translateX(-50%) rotate(0deg); }
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #ff3700;
+            position: relative;
+            overflow: hidden;
+            transition: transform 5s cubic-bezier(0.15, 0.85, 0.15, 1);
+            box-shadow: 0 0 40px rgba(255, 55, 0, 0.6), inset 0 0 30px rgba(0,0,0,0.8);
+            background: #120202;
+        }
+
+        /* Светящаяся кнопка по центру */
+        .wheel-center {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background: #ffdd00;
+            border: 4px solid #ff0000;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            box-shadow: 0 0 15px #ffdd00;
+        }
+
+        .display-box {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            min-height: 75px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(255, 55, 0, 0.2);
+            box-shadow: inset 0 0 15px rgba(255,0,0,0.3);
+        }
+
+        .result {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #ffdd00;
+            text-shadow: 0 0 15px rgba(255, 221, 0, 0.6);
+        }
+
+        /* Класс анимации триумфального взрыва для готового текста */
+        .result.burn {
+            animation: textExplosion 0.5s ease-out forwards;
+        }
+
+        @keyframes textExplosion {
+            0% { transform: scale(0.6); opacity: 0; filter: blur(5px); }
+            50% { transform: scale(1.1); filter: blur(0); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Огненная интерактивная кнопка */
+        .btn {
+            background: linear-gradient(135deg, #ff0000 0%, #ff7700 50%, #ffdd00 100%);
+            background-size: 200% auto;
+            color: white;
+            border: none;
+            padding: 16px 24px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            border-radius: 50px;
+            cursor: pointer;
+            box-sizing: border-box;
+            box-shadow: 0 5px 25px rgba(255, 55, 0, 0.4);
+            transition: all 0.4s ease;
+            width: 100%;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-position: right center;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(255, 119, 0, 0.6), 0 0 20px #ffdd00;
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        .btn:disabled {
+            background: #2b1f1f;
+            color: #665555;
+            border: 1px solid #443333;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sparks"></div>
+
+    <div class="container">
+        <h1>Сверхновые</h1>
+        <p class="subtitle">Взрывной рандомайзер названий</p>
+        
+        <div class="wheel-wrapper">
+            <div class="pointer" id="arrow"></div>
+            <canvas id="wheelCanvas" class="wheel" width="320" height="320"></canvas>
+            <div class="wheel-center"></div>
+        </div>
+
+        <div class="display-box">
+            <div class="result" id="result-text">Зажгите звезду!</div>
+        </div>
+
+        <button class="btn" id="spin-btn" onclick="spinWheel()">Инициировать взрыв</button>
+    </div>
